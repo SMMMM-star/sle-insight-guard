@@ -9,6 +9,7 @@ import { ChevronDown, ChevronUp, Activity, Brain, Microscope, Dna } from 'lucide
 import { cn } from '@/lib/utils';
 
 interface FormData {
+  PatientName: string;
   [key: string]: number | string;
 }
 
@@ -18,8 +19,9 @@ interface PredictionFormProps {
 }
 
 const PredictionForm: React.FC<PredictionFormProps> = ({ onSubmit, isLoading }) => {
-  const [formData, setFormData] = useState<FormData>({});
+  const [formData, setFormData] = useState<FormData>({ PatientName: '' });
   const [openSections, setOpenSections] = useState({
+    patient: true,
     clinical: true,
     us: false,
     cxr: false,
@@ -159,30 +161,63 @@ const PredictionForm: React.FC<PredictionFormProps> = ({ onSubmit, isLoading }) 
   );
 
   return (
-    <Card className="card-gradient border-border elegant-shadow">
-      <CardHeader className="text-center">
-        <CardTitle className="text-3xl font-bold hero-gradient bg-clip-text text-transparent">
-          SLE Diagnosis & Flare Prediction
+    <Card className="glass-card neon-shadow animate-fade-in">
+      <CardHeader className="text-center relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-accent/10 to-medical-primary/10 rounded-t-lg"></div>
+        <CardTitle className="relative text-4xl font-bold bg-gradient-to-r from-primary via-accent to-medical-primary bg-clip-text text-transparent animate-gradient bg-[length:200%_200%]">
+          SLE AI Prediction Platform
         </CardTitle>
-        <CardDescription className="text-lg text-muted-foreground">
-          Enter patient data for comprehensive SLE analysis
+        <CardDescription className="relative text-xl text-muted-foreground mt-4">
+          Advanced machine learning analysis for precision medical diagnosis
         </CardDescription>
       </CardHeader>
       
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          {/* Patient Information Section */}
+          <Collapsible open={openSections.patient} onOpenChange={() => toggleSection('patient')}>
+            <SectionHeader
+              title="Patient Information"
+              description="Basic patient identification and demographics"
+              icon={Activity}
+              isOpen={openSections.patient}
+              onClick={() => toggleSection('patient')}
+              gradient="bg-gradient-to-r from-primary to-accent"
+            />
+            <CollapsibleContent className="pt-6">
+              <div className="glass-card p-6 border border-primary/20">
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="PatientName" className="text-foreground font-semibold text-lg">
+                      Patient Full Name *
+                    </Label>
+                    <Input
+                      id="PatientName"
+                      type="text"
+                      value={formData.PatientName || ''}
+                      onChange={(e) => handleInputChange('PatientName', e.target.value)}
+                      placeholder="Enter patient's complete name"
+                      className="mt-2 bg-input/50 border-border/50 focus:border-primary/50 focus:ring-primary/20 text-lg py-3"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
           {/* Clinical Data Section */}
           <Collapsible open={openSections.clinical} onOpenChange={() => toggleSection('clinical')}>
             <SectionHeader
-              title="Clinical Data"
-              description="Basic patient information and clinical indicators"
+              title="Clinical Features"
+              description="Comprehensive clinical assessment and laboratory findings"
               icon={Activity}
               isOpen={openSections.clinical}
               onClick={() => toggleSection('clinical')}
-              gradient="bg-gradient-to-r from-medical-primary to-blue-600"
+              gradient="bg-gradient-to-r from-medical-primary to-medical-secondary"
             />
             <CollapsibleContent className="pt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {clinicalFields.map(renderField)}
               </div>
             </CollapsibleContent>
@@ -191,12 +226,12 @@ const PredictionForm: React.FC<PredictionFormProps> = ({ onSubmit, isLoading }) 
           {/* US Embeddings Section */}
           <Collapsible open={openSections.us} onOpenChange={() => toggleSection('us')}>
             <SectionHeader
-              title="Ultrasound Embeddings"
-              description="64-dimensional ultrasound feature embeddings"
+              title="Ultrasound AI Embeddings"
+              description="64-dimensional deep learning ultrasound feature vectors"
               icon={Brain}
               isOpen={openSections.us}
               onClick={() => toggleSection('us')}
-              gradient="bg-gradient-to-r from-medical-secondary to-purple-600"
+              gradient="bg-gradient-to-r from-accent to-medical-secondary"
             />
             <CollapsibleContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-4">
@@ -208,12 +243,12 @@ const PredictionForm: React.FC<PredictionFormProps> = ({ onSubmit, isLoading }) 
           {/* CXR Embeddings Section */}
           <Collapsible open={openSections.cxr} onOpenChange={() => toggleSection('cxr')}>
             <SectionHeader
-              title="Chest X-Ray Embeddings"
-              description="64-dimensional chest X-ray feature embeddings"
+              title="Chest X-Ray AI Embeddings"
+              description="64-dimensional radiological deep learning feature analysis"
               icon={Microscope}
               isOpen={openSections.cxr}
               onClick={() => toggleSection('cxr')}
-              gradient="bg-gradient-to-r from-medical-accent to-pink-600"
+              gradient="bg-gradient-to-r from-medical-accent to-primary"
             />
             <CollapsibleContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-8 gap-4">
@@ -225,12 +260,12 @@ const PredictionForm: React.FC<PredictionFormProps> = ({ onSubmit, isLoading }) 
           {/* Omic Data Section */}
           <Collapsible open={openSections.omic} onOpenChange={() => toggleSection('omic')}>
             <SectionHeader
-              title="Omic Data"
-              description="50-dimensional omics feature data"
+              title="Multi-Omic Data Analysis"
+              description="50-dimensional genomic and proteomic biomarker signatures"
               icon={Dna}
               isOpen={openSections.omic}
               onClick={() => toggleSection('omic')}
-              gradient="bg-gradient-to-r from-emerald-500 to-green-600"
+              gradient="bg-gradient-to-r from-success to-medical-primary"
             />
             <CollapsibleContent className="pt-6">
               <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-10 gap-4">
@@ -239,21 +274,23 @@ const PredictionForm: React.FC<PredictionFormProps> = ({ onSubmit, isLoading }) 
             </CollapsibleContent>
           </Collapsible>
 
-          <div className="pt-8">
+          <div className="pt-12">
             <Button
               type="submit"
-              variant="predict"
-              size="xl"
               disabled={isLoading}
-              className="w-full"
+              className="w-full bg-gradient-to-r from-primary via-accent to-medical-primary hover:from-primary/90 hover:via-accent/90 hover:to-medical-primary/90 text-white font-bold py-6 px-8 text-xl neon-shadow animate-shimmer relative overflow-hidden group"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
               {isLoading ? (
                 <>
-                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                  Processing Prediction...
+                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white mr-3 relative z-10"></div>
+                  <span className="relative z-10">Processing AI Analysis...</span>
                 </>
               ) : (
-                'Generate Prediction'
+                <>
+                  <Brain className="h-6 w-6 mr-3 relative z-10" />
+                  <span className="relative z-10">Generate AI Prediction</span>
+                </>
               )}
             </Button>
           </div>

@@ -13,6 +13,7 @@ interface PredictionResult {
   flare_12m: number;
   flare_probability: number;
   timestamp: string;
+  patient_name: string;
   input_data: any;
 }
 
@@ -42,6 +43,7 @@ const Index = () => {
         flare_12m: Math.random() > 0.6 ? 1 : 0,
         flare_probability: Math.random(),
         timestamp: new Date().toISOString(),
+        patient_name: formData.PatientName,
         input_data: formData
       };
       
@@ -64,32 +66,28 @@ const Index = () => {
     }
   };
 
-  const handleDownload = () => {
+  const handleDownload = async () => {
     if (!predictionResult) return;
     
-    const csvContent = [
-      ['Field', 'Value'],
-      ['SLE Diagnosis', predictionResult.sle_diagnosis],
-      ['SLE Probability', (predictionResult.sle_probability * 100).toFixed(2) + '%'],
-      ['12-Month Flare Risk', predictionResult.flare_12m],
-      ['Flare Probability', (predictionResult.flare_probability * 100).toFixed(2) + '%'],
-      ['Analysis Date', new Date(predictionResult.timestamp).toLocaleString()],
-    ].map(row => row.join(',')).join('\n');
+    try {
+      const { generatePredictionReport } = await import('@/utils/pdfGenerator');
+      const pdf = generatePredictionReport(predictionResult);
+      
+      const fileName = `SLE_Prediction_Report_${predictionResult.patient_name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`;
+      pdf.save(fileName);
 
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `sle_prediction_${Date.now()}.csv`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
-
-    toast({
-      title: "Download Complete",
-      description: "Your prediction report has been downloaded successfully.",
-    });
+      toast({
+        title: "PDF Report Downloaded",
+        description: "Your comprehensive prediction report has been downloaded successfully.",
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "Download Failed", 
+        description: "There was an error generating the PDF report. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleBackToHome = () => {

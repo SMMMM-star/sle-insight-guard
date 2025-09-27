@@ -12,6 +12,7 @@ interface PredictionResult {
   flare_12m: number;
   flare_probability: number;
   timestamp: string;
+  patient_name: string;
   input_data: any;
 }
 
@@ -45,15 +46,16 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
     risk: ReturnType<typeof getRiskLevel>;
     description: string;
   }) => (
-    <Card className="card-gradient border-border elegant-shadow hover:scale-[1.02] transition-transform">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center justify-between">
-          <span className="text-xl font-semibold">{title}</span>
+    <Card className="glass-card elegant-shadow hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl border border-primary/20">
+      <CardHeader className="pb-4 relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-t-lg"></div>
+        <CardTitle className="relative flex items-center justify-between">
+          <span className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{title}</span>
           <risk.icon className={cn(
-            "h-6 w-6",
-            risk.color === 'destructive' && "text-destructive",
-            risk.color === 'warning' && "text-warning",
-            risk.color === 'success' && "text-success"
+            "h-7 w-7 animate-pulse-slow",
+            risk.color === 'destructive' && "text-destructive drop-shadow-lg",
+            risk.color === 'warning' && "text-warning drop-shadow-lg",
+            risk.color === 'success' && "text-success drop-shadow-lg"
           )} />
         </CardTitle>
       </CardHeader>
@@ -100,16 +102,22 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
   );
 
   return (
-    <div className="space-y-6 animate-fade-in">
-      <Card className="hero-gradient border-border elegant-shadow">
-        <CardHeader className="text-center text-white">
-          <CardTitle className="text-2xl font-bold flex items-center justify-center gap-2">
-            <CheckCircle className="h-6 w-6" />
-            Prediction Complete
+    <div className="space-y-8 animate-fade-in">
+      <Card className="hero-gradient border-primary/30 neon-shadow animate-gradient relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+        <CardHeader className="text-center text-white relative z-10 py-8">
+          <CardTitle className="text-4xl font-bold flex items-center justify-center gap-3 mb-4">
+            <CheckCircle className="h-10 w-10 animate-bounce-subtle" />
+            Prediction Analysis Complete
           </CardTitle>
-          <p className="text-white/80">
-            Analysis completed on {new Date(result.timestamp).toLocaleString()}
-          </p>
+          <div className="space-y-2">
+            <p className="text-2xl font-semibold text-white">
+              Patient: {result.patient_name}
+            </p>
+            <p className="text-white/90 text-lg">
+              Analysis completed on {new Date(result.timestamp).toLocaleString()}
+            </p>
+          </div>
         </CardHeader>
       </Card>
 
@@ -131,9 +139,10 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
         />
       </div>
 
-      <Card className="card-gradient border-border elegant-shadow">
-        <CardHeader>
-          <CardTitle className="text-xl font-semibold">Clinical Summary</CardTitle>
+      <Card className="glass-card border-primary/20 elegant-shadow">
+        <CardHeader className="relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-medical-primary/10 via-transparent to-medical-secondary/10 rounded-t-lg"></div>
+          <CardTitle className="relative text-2xl font-bold bg-gradient-to-r from-medical-primary to-medical-secondary bg-clip-text text-transparent">Clinical Summary & Recommendations</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
