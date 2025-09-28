@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/enhanced-button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Download, AlertTriangle, CheckCircle, TrendingUp, TrendingDown } from 'lucide-react';
+import { Download, AlertTriangle, CheckCircle, TrendingUp, TrendingDown, Stethoscope, AlertCircle, Heart, Shield } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface PredictionResult {
@@ -32,6 +32,116 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
 
   const sleRisk = getRiskLevel(result.sle_probability);
   const flareRisk = getRiskLevel(result.flare_probability);
+
+  const getTreatmentRecommendation = (sleRisk: ReturnType<typeof getRiskLevel>, flareRisk: ReturnType<typeof getRiskLevel>) => {
+    const overallRisk = Math.max(result.sle_probability, result.flare_probability);
+    
+    if (overallRisk >= 0.7) {
+      return {
+        level: 'High Risk - Immediate Intervention',
+        treatments: [
+          'Corticosteroids (Prednisone 10-40mg daily)',
+          'Immunosuppressive therapy (Methotrexate/Azathioprine)',
+          'Antimalarial drugs (Hydroxychloroquine)',
+          'Regular specialist monitoring (monthly visits)',
+          'Lifestyle modifications and stress management'
+        ],
+        urgency: 'high'
+      };
+    } else if (overallRisk >= 0.4) {
+      return {
+        level: 'Moderate Risk - Active Monitoring',
+        treatments: [
+          'Antimalarial drugs (Hydroxychloroquine)',
+          'Low-dose corticosteroids if needed',
+          'NSAIDs for joint symptoms',
+          'Regular monitoring (bi-monthly visits)',
+          'Lifestyle counseling and sun protection'
+        ],
+        urgency: 'medium'
+      };
+    } else {
+      return {
+        level: 'Low Risk - Preventive Care',
+        treatments: [
+          'Regular health checkups (quarterly)',
+          'Lifestyle modifications and exercise',
+          'Sun protection and stress management',
+          'Monitoring for early symptoms',
+          'Patient education and support'
+        ],
+        urgency: 'low'
+      };
+    }
+  };
+
+  const TreatmentRecommendations = ({ sleRisk, flareRisk }: { 
+    sleRisk: ReturnType<typeof getRiskLevel>; 
+    flareRisk: ReturnType<typeof getRiskLevel>; 
+  }) => {
+    const treatment = getTreatmentRecommendation(sleRisk, flareRisk);
+    
+    return (
+      <Card className="glass-card border-medical-primary/30 elegant-shadow relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-medical-primary/5 via-transparent to-medical-secondary/5"></div>
+        <CardHeader className="relative">
+          <CardTitle className="flex items-center gap-3 text-2xl font-bold">
+            <Stethoscope className="h-8 w-8 text-medical-primary" />
+            <span className="bg-gradient-to-r from-medical-primary to-medical-secondary bg-clip-text text-transparent">
+              Primary Treatment Recommendations
+            </span>
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6 relative">
+          <div className="flex items-center gap-3 p-4 rounded-lg bg-gradient-to-r from-medical-primary/10 to-medical-secondary/10 border border-medical-primary/20">
+            <div className={cn(
+              "p-2 rounded-full",
+              treatment.urgency === 'high' && "bg-destructive/20",
+              treatment.urgency === 'medium' && "bg-warning/20", 
+              treatment.urgency === 'low' && "bg-success/20"
+            )}>
+              {treatment.urgency === 'high' && <AlertCircle className="h-6 w-6 text-destructive" />}
+              {treatment.urgency === 'medium' && <Shield className="h-6 w-6 text-warning" />}
+              {treatment.urgency === 'low' && <Heart className="h-6 w-6 text-success" />}
+            </div>
+            <div>
+              <h3 className="font-semibold text-lg">{treatment.level}</h3>
+            </div>
+          </div>
+          
+          <div className="space-y-3">
+            <h4 className="font-semibold text-medical-primary flex items-center gap-2">
+              <CheckCircle className="h-5 w-5" />
+              Recommended Treatment Protocol:
+            </h4>
+            <ul className="space-y-2">
+              {treatment.treatments.map((item, index) => (
+                <li key={index} className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-medical-primary mt-2 flex-shrink-0"></div>
+                  <span className="text-sm text-muted-foreground">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          
+          <div className="p-4 rounded-lg bg-gradient-to-r from-warning/10 to-warning/5 border border-warning/30">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
+              <div className="space-y-1">
+                <p className="font-semibold text-warning">Medical Disclaimer</p>
+                <p className="text-sm text-muted-foreground">
+                  ⚠️ This tool is for educational and clinical decision support purposes only. 
+                  Always consult with a licensed healthcare professional for final diagnosis 
+                  and treatment decisions. This AI-generated recommendation should not replace 
+                  professional medical judgment.
+                </p>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
 
   const ResultCard = ({ 
     title, 
@@ -138,6 +248,9 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
           description="Probability of experiencing an SLE flare within the next 12 months."
         />
       </div>
+
+      {/* Treatment Recommendations Section */}
+      <TreatmentRecommendations sleRisk={sleRisk} flareRisk={flareRisk} />
 
       <Card className="glass-card border-primary/20 elegant-shadow">
         <CardHeader className="relative">
