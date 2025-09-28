@@ -82,11 +82,17 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
     const treatment = getTreatmentRecommendation(sleRisk, flareRisk);
     
     return (
-      <Card className="glass-card border-medical-primary/30 elegant-shadow relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-medical-primary/5 via-transparent to-medical-secondary/5"></div>
+      <Card className="glass-card border-medical-primary/30 treatment-shadow hover:premium-shadow transition-all duration-500 relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-medical-primary/5 via-transparent to-medical-secondary/5 group-hover:from-medical-primary/10 group-hover:to-medical-secondary/10 transition-all duration-500"></div>
+        <div className="absolute inset-0 treatment-gradient opacity-0 group-hover:opacity-30 transition-opacity duration-500"></div>
         <CardHeader className="relative">
-          <CardTitle className="flex items-center gap-3 text-2xl font-bold">
-            <Stethoscope className="h-8 w-8 text-medical-primary" />
+          <CardTitle className="flex items-center gap-3 text-2xl md:text-3xl font-bold">
+            <div className="relative">
+              <Stethoscope className="h-8 w-8 text-medical-primary animate-pulse-slow" />
+              <div className="absolute inset-0 h-8 w-8 text-medical-secondary/50 animate-pulse-slow" style={{ animationDelay: '1s' }}>
+                <Stethoscope className="h-8 w-8" />
+              </div>
+            </div>
             <span className="bg-gradient-to-r from-medical-primary to-medical-secondary bg-clip-text text-transparent">
               Primary Treatment Recommendations
             </span>
@@ -156,9 +162,10 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
     risk: ReturnType<typeof getRiskLevel>;
     description: string;
   }) => (
-    <Card className="glass-card elegant-shadow hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl border border-primary/20">
+    <Card className="glass-card treatment-shadow hover:premium-shadow transition-all duration-500 hover:scale-[1.02] border border-primary/20 relative overflow-hidden group">
       <CardHeader className="pb-4 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-t-lg"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5 rounded-t-lg group-hover:from-primary/10 group-hover:to-accent/10 transition-all duration-500"></div>
+        <div className="absolute inset-0 aurora-gradient opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-t-lg"></div>
         <CardTitle className="relative flex items-center justify-between">
           <span className="text-2xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">{title}</span>
           <risk.icon className={cn(
@@ -212,11 +219,12 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
   );
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      <Card className="hero-gradient border-primary/30 neon-shadow animate-gradient relative overflow-hidden">
+    <div className="space-y-8 animate-fade-in-up">
+      <Card className="hero-gradient border-primary/30 premium-shadow animate-gradient relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+        <div className="absolute inset-0 aurora-gradient opacity-20 animate-gradient"></div>
         <CardHeader className="text-center text-white relative z-10 py-8">
-          <CardTitle className="text-4xl font-bold flex items-center justify-center gap-3 mb-4">
+          <CardTitle className="text-4xl md:text-5xl font-bold flex items-center justify-center gap-3 mb-4">
             <CheckCircle className="h-10 w-10 animate-bounce-subtle" />
             Prediction Analysis Complete
           </CardTitle>
@@ -252,7 +260,7 @@ const PredictionResults: React.FC<PredictionResultsProps> = ({ result, onDownloa
       {/* Treatment Recommendations Section */}
       <TreatmentRecommendations sleRisk={sleRisk} flareRisk={flareRisk} />
 
-      <Card className="glass-card border-primary/20 elegant-shadow">
+      <Card className="glass-card border-primary/20 treatment-shadow hover:floating-shadow transition-all duration-500">
         <CardHeader className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-medical-primary/10 via-transparent to-medical-secondary/10 rounded-t-lg"></div>
           <CardTitle className="relative text-2xl font-bold bg-gradient-to-r from-medical-primary to-medical-secondary bg-clip-text text-transparent">Clinical Summary & Recommendations</CardTitle>

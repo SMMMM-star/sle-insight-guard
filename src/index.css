@@ -46,21 +46,27 @@ All colors MUST be HSL.
     --medical-secondary: 270 100% 75%;
     --medical-accent: 320 100% 60%;
 
-    /* Enhanced Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(250 100% 70% / 0.9), hsl(190 100% 50% / 0.8), hsl(270 100% 75% / 0.7));
-    --gradient-card: linear-gradient(145deg, hsl(220 20% 4%), hsl(220 25% 8%), hsl(220 15% 6%));
+    /* Ultra-Stunning Enhanced Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(250 100% 70% / 0.95), hsl(190 100% 50% / 0.9), hsl(270 100% 75% / 0.85));
+    --gradient-card: linear-gradient(145deg, hsl(220 20% 4% / 0.9), hsl(220 25% 8% / 0.8), hsl(220 15% 6% / 0.7));
     --gradient-medical: linear-gradient(135deg, hsl(190 100% 50%), hsl(270 100% 75%), hsl(250 100% 70%));
     --gradient-success: linear-gradient(135deg, hsl(140 70% 50%), hsl(140 70% 40%));
     --gradient-premium: linear-gradient(135deg, hsl(300 100% 60%), hsl(250 100% 70%), hsl(200 100% 60%));
     --gradient-glass: linear-gradient(135deg, hsl(220 20% 4% / 0.8), hsl(220 25% 8% / 0.6));
     --gradient-neon: linear-gradient(90deg, hsl(250 100% 70%), hsl(180 100% 50%), hsl(270 100% 75%));
+    --gradient-aurora: linear-gradient(45deg, hsl(300 100% 60%), hsl(250 100% 70%), hsl(200 100% 60%), hsl(140 70% 50%));
+    --gradient-professional: linear-gradient(135deg, hsl(220 30% 8%), hsl(220 35% 12%), hsl(220 25% 6%));
+    --gradient-treatment: linear-gradient(135deg, hsl(190 100% 50% / 0.1), hsl(270 100% 75% / 0.1));
     
-    /* Advanced Shadows */
+    /* Advanced Multi-Layer Shadows */
     --shadow-glow: 0 0 80px hsl(250 100% 70% / 0.4), 0 0 40px hsl(190 100% 50% / 0.3);
     --shadow-medical: 0 20px 60px -10px hsl(190 100% 50% / 0.4);
     --shadow-elegant: 0 30px 60px -20px hsl(220 27% 2% / 0.9);
     --shadow-neon: 0 0 30px hsl(250 100% 70% / 0.6), inset 0 1px 0 hsl(250 100% 70% / 0.2);
     --shadow-glass: 0 8px 32px hsl(220 27% 2% / 0.5), inset 0 1px 0 hsl(220 15% 25% / 0.3);
+    --shadow-floating: 0 20px 40px -12px hsl(220 27% 2% / 0.8), 0 0 60px hsl(250 100% 70% / 0.2);
+    --shadow-premium: 0 25px 50px -12px hsl(300 100% 60% / 0.4), 0 0 80px hsl(250 100% 70% / 0.3);
+    --shadow-treatment: 0 15px 35px -10px hsl(190 100% 50% / 0.3), 0 0 40px hsl(270 100% 75% / 0.2);
 
     --radius: 1rem;
 
@@ -195,6 +201,30 @@ All colors MUST be HSL.
   .neon-shadow {
     box-shadow: var(--shadow-neon);
   }
+  
+  .floating-shadow {
+    box-shadow: var(--shadow-floating);
+  }
+  
+  .premium-shadow {
+    box-shadow: var(--shadow-premium);
+  }
+  
+  .treatment-shadow {
+    box-shadow: var(--shadow-treatment);
+  }
+  
+  .aurora-gradient {
+    background: var(--gradient-aurora);
+  }
+  
+  .professional-gradient {
+    background: var(--gradient-professional);
+  }
+  
+  .treatment-gradient {
+    background: var(--gradient-treatment);
+  }
 
   .animate-pulse-slow {
     animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -219,6 +249,18 @@ All colors MUST be HSL.
   .animate-gradient {
     background-size: 200% 200%;
     animation: gradient-shift 4s ease infinite;
+  }
+  
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.6s ease-out;
+  }
+  
+  .animate-rotate-slow {
+    animation: rotate-slow 20s linear infinite;
   }
 }
 
@@ -264,4 +306,35 @@ All colors MUST be HSL.
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(180deg, hsl(var(--accent)), hsl(var(--primary)));
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes rotate-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
